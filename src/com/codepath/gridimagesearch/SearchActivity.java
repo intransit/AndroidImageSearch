@@ -47,7 +47,6 @@ public class SearchActivity extends Activity {
 		//clicking an image should open it in a new activity as a full screen
 		//therefore, attaching click handler
 		gvResults.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View parent, int position,
 					long arg3) {
@@ -58,6 +57,20 @@ public class SearchActivity extends Activity {
 				startActivity(i);
 			}
 		});
+		
+		gvResults.setOnScrollListener(new EndlessScrollListener() {
+		    @Override
+		    public void onLoadMore(int page, int totalItemsCount) {
+                // Whatever code is needed to append new items to your AdapterView
+                // probably sending out a network request and appending items to your adapter. 
+                // Use the page or the totalItemsCount to retrieve correct data.
+		        customLoadMoreFromActivity(page); 
+		    }
+
+			private void customLoadMoreFromActivity(int page) {
+				
+			}
+	    });
 	}
 
 	@Override
@@ -75,7 +88,6 @@ public class SearchActivity extends Activity {
 	
 	public void launchSettings(MenuItem m){
 		Intent i = new Intent(getBaseContext(), SettingsActivity.class);
-		//i.putExtra("name", curName);
 		startActivityForResult(i, REQUEST_CODE);
 	}
 	
@@ -87,8 +99,6 @@ public class SearchActivity extends Activity {
 		     filterColor = data.getExtras().getString("color");
 		     filterType = data.getExtras().getString("type");
 		     filterSite = data.getExtras().getString("site");
-		     
-		     //System.out.println("valuesssssss: " + filterSize + ", " + filterColor + ", " + filterType + ", " + filterSite);
 		  }
 	}
 	
@@ -99,10 +109,7 @@ public class SearchActivity extends Activity {
 		AsyncHttpClient client = new AsyncHttpClient();
 		
 		//https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=android
-		//Site filter: as_sitesearch
-		//Color filter: imgcolor
-		//Size filter: imgsz
-		//Type filter: imgtype
+		//Site filter: as_sitesearch, Color filter: imgcolor, Size filter: imgsz, Type filter: imgtype
 		client.get("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&"+"start="+0+"&v=1.0&q="+Uri.encode(query)+
 				"&imgsz="+filterSize+"&imgcolor="+filterColor+"&imgtype="+filterType+"&as_sitesearch="+filterSite, 
 				new JsonHttpResponseHandler(){
@@ -114,11 +121,9 @@ public class SearchActivity extends Activity {
 				try{
 					imageJsonResults = reponse.getJSONObject("responseData").getJSONArray("results");
 					
-					imageResults.clear();
-					
+					imageResults.clear();				
 					imageAdapter.addAll(ImageResults.fromJSONArray(imageJsonResults));
-					//Or
-					//imageResults.addAll(ImageResults.fromJSONArray(imageJsonResults));   +   imageAdapter.notify();
+					//Or:=> imageResults.addAll(ImageResults.fromJSONArray(imageJsonResults));   +   imageAdapter.notify();
 					
 					Log.d("DEBUG", imageResults.toString());
 				} catch(JSONException e) {
