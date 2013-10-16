@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GridImageSearch</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="query_hint">Enter search term</string>
+    <string name="title_activity_image_display">ImageDisplayActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="tvSettingsTitle">"Advanced search options "</string>
+    <string name="tvSizeTitle">"Image Size: "</string>
+    <string name="etSizeValue">Small</string>
+    <string name="etColorValue">Blue</string>
+    <string name="tvColorTitle">"Color Filter: "</string>
+    <string name="etTypeValue">Faces</string>
+    <string name="tvTypeTitle">"Image Type: "</string>
+    <string name="etSiteValue">espn.com</string>
+    <string name="tvSiteTitle">"Site Filter: "</string>
+    <string name="btnSave">Save</string>
+
+</resources>
