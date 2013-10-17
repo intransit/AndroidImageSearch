@@ -64,12 +64,9 @@ public class SearchActivity extends Activity {
                 // Whatever code is needed to append new items to your AdapterView
                 // probably sending out a network request and appending items to your adapter. 
                 // Use the page or the totalItemsCount to retrieve correct data.
-		        customLoadMoreFromActivity(page); 
+		        //loadImages(totalItemsCount);  ----> do not multiply startIndex by 8 in this case! 
+		        loadImages(page); 
 		    }
-
-			private void customLoadMoreFromActivity(int page) {
-				
-			}
 	    });
 	}
 
@@ -103,6 +100,12 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void onImageSearch(View v){
+		imageResults.clear();
+		loadImages(0);
+	}
+	
+	public void loadImages(int page){
+		int startIndex = 8*page;
 		String query = etQuery.getText().toString();
 		Toast.makeText(this, "Searching for: " + query, Toast.LENGTH_SHORT).show();
 		
@@ -110,7 +113,7 @@ public class SearchActivity extends Activity {
 		
 		//https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=android
 		//Site filter: as_sitesearch, Color filter: imgcolor, Size filter: imgsz, Type filter: imgtype
-		client.get("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&"+"start="+0+"&v=1.0&q="+Uri.encode(query)+
+		client.get("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&"+"start="+startIndex+"&v=1.0&q="+Uri.encode(query)+
 				"&imgsz="+filterSize+"&imgcolor="+filterColor+"&imgtype="+filterType+"&as_sitesearch="+filterSite, 
 				new JsonHttpResponseHandler(){
 			
@@ -120,8 +123,7 @@ public class SearchActivity extends Activity {
 				
 				try{
 					imageJsonResults = reponse.getJSONObject("responseData").getJSONArray("results");
-					
-					imageResults.clear();				
+									
 					imageAdapter.addAll(ImageResults.fromJSONArray(imageJsonResults));
 					//Or:=> imageResults.addAll(ImageResults.fromJSONArray(imageJsonResults));   +   imageAdapter.notify();
 					
